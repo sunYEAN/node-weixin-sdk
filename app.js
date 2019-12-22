@@ -9,23 +9,28 @@ const onerror = require('koa-onerror');
 const bodyParser = require('koa-bodyparser');
 const WxSdk = require('./controller/weixin/sdk');
 
-const PATH =path.resolve(__dirname, './saveFiles/weixin.txt');
+const TOKEN =path.resolve(__dirname, './saveFiles/token.txt');
+const TICKET =path.resolve(__dirname, './saveFiles/ticket.txt');
 
 const wxSdk = new WxSdk({
 
     // 回调函数 设置AccessToken
     setAccessToken: (content) => {
-        return utils.writeFileAsync(PATH, content);
+        return utils.writeFileAsync(TOKEN, content);
     },
 
     // 获取AccessToken
     getAccessToken: () => {
-        return utils.readFileAsync(PATH, 'UTF-8');
+        return utils.readFileAsync(TOKEN, 'UTF-8');
     },
 
-    setTicket: (data) => {
+    setTicket: (content) => {
+        return utils.writeFileAsync(TICKET, content);
     },
+
+    // 得到jsapi_ticket
     getTicket: () => {
+        return utils.readFileAsync(TICKET, 'utf-8');
     },
 });
 
@@ -69,7 +74,7 @@ router.get('/api', async (ctx, next) => {
     // const content = await wxSdk.updateAccessToken();
     ctx.body = {
         status: 200,
-        data: content
+        data: 123
     };
 });
 
