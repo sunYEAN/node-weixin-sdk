@@ -1,14 +1,10 @@
 const fs = require('fs');
 const config = require('../../config');
-const crypto = require('crypto');
+const {getSignPackage} = require('../../utils/files');
 const {getWxAccessToken, getWxApiTicket} = require('../../service');
 
-const sha1 = (str) => {
-    let shasum = crypto.createHash("sha1");
-    shasum.update(str);
-    str = shasum.digest("hex");
-    return str;
-};
+
+
 
 
 function WxSdk(opt) {
@@ -24,8 +20,6 @@ function WxSdk(opt) {
     this.getAccessToken = this.options.getAccessToken;
     this.setTicket = this.options.setTicket;
     this.getTicket = this.options.getTicket;
-
-    this.updateJsApiTicket();
 }
 
 // 更新accessToken
@@ -70,6 +64,16 @@ WxSdk.prototype.isValidate = function (content) {
     const {endTime} = content;
     const now = Date.now();
     return now <= parseInt(endTime);
+};
+
+// 获取配置结构
+WxSdk.prototype.getSignatureOb = function (url) {
+    return this.updateJsApiTicket().then(ticketData => {
+        const {ticket} = ticketData;
+        const ob = getSignPackage(ticket, url);
+        ob.appId = this.appId;
+        return ob;
+    })
 };
 
 module.exports = WxSdk;

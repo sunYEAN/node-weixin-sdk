@@ -1,14 +1,20 @@
 const $http = require('request-promise');
 
+function stringPathQuery(ob) {
+    if (!ob) return '';
+    let queryArr = [];
+    for (let i in ob) {
+        queryArr.push(`${i}=${ob[i]}`);
+    }
+    return queryArr.join('&');
+}
+
 function parserUrl(url, queries) {
-    if (queries.toString() !== '[object Object]') return false;
+    if (queries.toString() !== '[object Object]' || !queries) return false;
     const hasQuery = url.indexOf('?') > -1;
     let queryStr = hasQuery ? '&' : '?';
-    let queryArr = [];
-    for (let i in queries) {
-        queryArr.push(`${i}=${queries[i]}`);
-    }
-    return url + queryStr + (queryArr.join('&'));
+    let query = stringPathQuery(queries);
+    return url + queryStr + query;
 }
 
 const URLS = {
