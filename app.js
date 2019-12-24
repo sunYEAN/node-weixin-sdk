@@ -22,14 +22,6 @@ app.use(bodyParser())
     .use(routers.routes())
     .use(routers.allowedMethods())
 
-// logger
-app.use(async (ctx, next) => {
-    const start = new Date();
-    await next();
-    const ms = new Date() - start;
-    console.log(`${ctx.method} ${ctx.url} - $ms`)
-});
-
 
 app.on('error', function(err, ctx) {
     console.log(err)

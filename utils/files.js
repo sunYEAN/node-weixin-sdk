@@ -39,6 +39,20 @@ function stringPathQuery(ob) {
 }
 
 /**
+ * 整合URL
+ * @param url
+ * @param queries
+ * @returns {*}
+ */
+function parserUrl(url, queries) {
+    if (queries.toString() !== '[object Object]' || !queries) return false;
+    const hasQuery = url.indexOf('?') > -1;
+    let queryStr = hasQuery ? '&' : '?';
+    let query = stringPathQuery(queries);
+    return url + queryStr + query;
+}
+
+/**
  * 获取签名数据
  * @param ticket
  * @param url
@@ -98,6 +112,7 @@ function writeFileAsync (path, content) {
 }
 
 module.exports = {
+    parserUrl,
     readFileAsync,
     writeFileAsync,
     getSignPackage,
